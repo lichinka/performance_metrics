@@ -35,12 +35,16 @@ void memory_access (const unsigned int access_count, const size_t access_size)
 /**
  * Function to test the correctness of the code performance counters.-
  */
-static void test_fail (char *file, int line, char *call, int ret_value)
+static void test_fail (char *file, int line, char *call, int err_code)
 {
-    if (ret_value != PAPI_OK)
+    if (err_code != PAPI_OK)
     {
-        fprintf (stderr, "PAPI returned error %d\n", ret_value);
-        exit (ret_value);
+        fprintf (stderr, "PAPI returned an error (%d):\n\t", err_code);
+        fprintf (stderr, "in file %s:%d\t", file, line);
+        char *err_msg = PAPI_strerror (err_code);
+        if (err_msg != NULL)
+            fprintf (stderr, "%s\n", err_msg);
+        exit (err_code);
     }
 }
 
